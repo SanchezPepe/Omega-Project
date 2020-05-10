@@ -6,6 +6,8 @@
 package servlets;
 
 import java.io.Serializable;
+import java.util.Date;
+
 
 /**
  *
@@ -14,10 +16,20 @@ import java.io.Serializable;
 public class Mensaje implements Serializable{
     private String quienManda;
     private String texto;
+    private String hora;
 
     public Mensaje(String quienManda, String texto) {
         this.quienManda = quienManda;
         this.texto = texto;
+        this.hora = new Date().toString();
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 
     public String getQuienManda() {

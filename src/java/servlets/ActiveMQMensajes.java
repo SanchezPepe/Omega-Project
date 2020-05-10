@@ -69,6 +69,9 @@ public class ActiveMQMensajes {
     }
     
     public static Mensaje recibeMensaje(String colaParaRecibir){
+        if(colaParaRecibir==null){
+            return null;
+        }
         Mensaje p = null;
         boolean goodByeReceived = false;
 

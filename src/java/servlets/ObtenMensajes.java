@@ -57,7 +57,7 @@ public class ObtenMensajes extends HttpServlet {
                     out.print("<div class=\"col-sm-6\">\n" +
 "              <div class=\"card\">\n" +
 "                <div class=\"card-body\">\n" +
-"                  <h5 class=\"card-title\">"+m.getQuienManda()+"</h5>\n" +
+"                  <h5 class=\"card-title\">"+m.getQuienManda()+"("+m.getHora()+")</h5>\n" +
 "                  <p class=\"card-text\">"+m.getTexto()+"</p>\n" +
 "\n" +
 "                </div>\n" +
