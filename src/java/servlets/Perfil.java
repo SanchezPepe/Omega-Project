@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -142,7 +143,9 @@ public class Perfil extends HttpServlet {
             //aqui van todos los mensajes que lea de la cola
             
             
-            
+            String recursoAIncluir = "/ObtenMensajes";
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(recursoAIncluir);
+            dispatcher.include(request, response);
             
             
             

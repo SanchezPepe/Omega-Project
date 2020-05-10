@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jms.JMSException;
 import javax.management.MalformedObjectNameException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,25 +34,51 @@ public class ObtenMensajes extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, InterruptedException, MalformedObjectNameException {
+            throws ServletException, IOException, InterruptedException, MalformedObjectNameException, JMSException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession mySession = request.getSession();
         if(mySession.getAttribute("username")==null){
-                response.sendRedirect("index.jsp");
-            }
+            response.sendRedirect("index.jsp");
+        }
+        
+        
         PrintWriter out = response.getWriter();
             
         String yo = (String) mySession.getAttribute("username");
         
-        ArrayList<Mensaje> alm = ActiveMQMensajes.recibeTODOMensaje(yo);
-        out.print("antes<br/>");
-        out.print(alm.toString());
-        out.print("antes<br/>");
-        for (int i = 0; i < alm.size(); i++) {
-            out.print(alm.get(i).getTexto()+": "+alm.get(i).getQuienManda()+"<br/>");
-        }
+        //out.print("<div class=\"row\"");
         
-                
+        out.print("<div class='mt-5'>"
+                + "<h3>Mensajes actuales:</h3>");
+            while(true){
+                Mensaje m = ActiveMQMensajes.recibeMensaje(yo);
+                if(m!=null){
+                    
+                    out.print("<div class=\"col-sm-6\">\n" +
+"              <div class=\"card\">\n" +
+"                <div class=\"card-body\">\n" +
+"                  <h5 class=\"card-title\">"+m.getQuienManda()+"</h5>\n" +
+"                  <p class=\"card-text\">"+m.getTexto()+"</p>\n" +
+"\n" +
+"                </div>\n" +
+"              </div>\n" +
+"            </div>");
+     
+                }else{
+                   break; 
+                }
+            }
+            out.print("</div>");
+            
+//        ArrayList<Mensaje> alm = ActiveMQMensajes.recibeTODO(yo);
+//        out.print("antes<br/>");
+//        out.print(alm.toString());
+//        out.print("antes<br/>");
+//        for (int i = 0; i < alm.size(); i++) {
+//            out.print(alm.get(i).getTexto()+": "+alm.get(i).getQuienManda()+"<br/>");
+//        }
+        
+        
             
         
     }
@@ -74,6 +101,8 @@ public class ObtenMensajes extends HttpServlet {
             Logger.getLogger(ObtenMensajes.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MalformedObjectNameException ex) {
             Logger.getLogger(ObtenMensajes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JMSException ex) {
+            Logger.getLogger(ObtenMensajes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -93,6 +122,8 @@ public class ObtenMensajes extends HttpServlet {
         } catch (InterruptedException ex) {
             Logger.getLogger(ObtenMensajes.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MalformedObjectNameException ex) {
+            Logger.getLogger(ObtenMensajes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JMSException ex) {
             Logger.getLogger(ObtenMensajes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

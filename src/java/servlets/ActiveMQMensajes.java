@@ -17,7 +17,9 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerInvocationHandler;
 import javax.management.MalformedObjectNameException;
@@ -85,14 +87,14 @@ public class ActiveMQMensajes {
             MessageConsumer messageConsumer = session.createConsumer(destination);
 
             while(!goodByeReceived){
-                ObjectMessage objectMessage = (ObjectMessage) messageConsumer.receive();
+                ObjectMessage objectMessage = (ObjectMessage) messageConsumer.receive(500);
                 if (objectMessage != null) {
                     System.out.print("Received the following message: ");
                     p = (Mensaje) objectMessage.getObject();
                     System.out.println(p.toString());
-                    System.out.println();
-                    goodByeReceived = true;
+                    System.out.println();   
                 }
+                goodByeReceived = true;
             }
             
                 
@@ -122,14 +124,13 @@ public class ActiveMQMensajes {
             connection.start();
 
             Session session = connection.createSession(false /*Transacter*/, Session.AUTO_ACKNOWLEDGE);
-
-            Destination destination = session.createQueue(colaParaRecibir);
-            
-            
+            Queue destination = session.createQueue(colaParaRecibir);
             MessageConsumer messageConsumer = session.createConsumer(destination);
 
-            while (!goodByeReceived) {     
-            Message msg = messageConsumer.receive();
+            while (!goodByeReceived) {  
+            
+                System.out.println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                Message msg = messageConsumer.receive();
             
                 System.out.println(msg.toString());
                 System.out.println("\n\n\n\n\n\n\n\n\n-----------------------------\n\n\n\n\n\n\n\n\n\n\n");
@@ -152,6 +153,87 @@ public class ActiveMQMensajes {
         }
         return p;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    public static ArrayList<Mensaje> recibeTODO(String colaParaRecibir) throws JMSException{
+        ArrayList<Mensaje> p = new ArrayList();
+        boolean goodByeReceived = false;
+
+        try {
+            ConnectionFactory factory =  new ActiveMQConnectionFactory(url);
+            Connection con = factory.createConnection();
+            Session session =   con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\nCreacion de la cola\n\n\n\n\n\n\n\n\n\n");
+            
+            
+            Destination destination = session.createQueue(colaParaRecibir);
+            
+            
+            MessageConsumer messageConsumer = session.createConsumer(destination);
+            //Queue queue = session.createQueue(colaParaRecibir);
+            //MessageConsumer consumer = session.createConsumer(queue);
+            con.start();
+            
+            int count = 0;
+            while (!goodByeReceived) {
+                System.out.println("Entra en el loop:"+count++);
+                Message msg = messageConsumer.receive(5000); 
+                System.out.println("Se recibió mensaje...");
+                System.out.println(msg==null);
+                //System.out.println(msg.toString());
+                if (msg != null) {
+                    System.out.println("**********************************************************************\n\n\n\n\n\n\n\n");
+                    Mensaje tm = (Mensaje) msg;
+                    System.out.println(tm.toString());
+                    System.out.println("**********************************************************************\n\n\n\n\n\n\n\n");
+                    p.add(tm);
+                }
+                else{
+                    System.out.println("Queue Empty"); 
+                    con.stop();
+                    goodByeReceived=!goodByeReceived;
+                    break;
+                }
+            }
+                  
+
+        } catch (Exception  e) {
+            System.out.println("-->"+e.toString());
+        }
+        return p;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
