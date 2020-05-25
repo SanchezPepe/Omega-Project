@@ -111,9 +111,6 @@ public class ActiveMQMensajes {
         return p;
     }
     
-    
-    
-    
     //https://stackoverflow.com/questions/10795220/how-to-get-all-enqueued-messages-in-activemq
     public static ArrayList<Mensaje> recibeTODOMensaje(String colaParaRecibir){
         ArrayList<Mensaje> p = new ArrayList();
@@ -156,26 +153,6 @@ public class ActiveMQMensajes {
         }
         return p;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     public static ArrayList<Mensaje> recibeTODO(String colaParaRecibir) throws JMSException{
         ArrayList<Mensaje> p = new ArrayList();
@@ -224,20 +201,5 @@ public class ActiveMQMensajes {
         }
         return p;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }
